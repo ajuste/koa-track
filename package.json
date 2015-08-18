@@ -1,0 +1,42 @@
+{
+  "name": "koa-track",
+  "version": "1.0.0",
+  "description": "Middleware for koa that helps to keep track of your users",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha tests --harmony --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ajuste/koa-track.git"
+  },
+  "keywords": [
+    "koa",
+    "track",
+    "user",
+    "cookie",
+    "browser",
+    "tracking"
+  ],
+  "author": "ajuste <juste.alvaro@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ajuste/koa-track/issues"
+  },
+  "homepage": "https://github.com/ajuste/koa-track#readme",
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "chai": "^3.2.0",
+    "koa": "^0.21.0",
+    "koa-route": "^2.4.2",
+    "proxyquire": "^1.6.0",
+    "supertest": "^1.0.1"
+  },
+  "dependencies": {
+    "node-uuid": "^1.4.3",
+    "underscore": "^1.8.3"
+  }
+}
