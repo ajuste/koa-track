@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha tests --harmony --recursive -R ./node_modules/mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js"
+    "test": "mocha tests --harmony --recursive -R mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
