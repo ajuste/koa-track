@@ -1,3 +1,6 @@
+[![npm version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+
 # koa-track
 
 ## Install
@@ -39,3 +42,14 @@ koaTrack.requestId({
 ## Track users
 
 <b>TODO</b>
+
+
+
+## License
+
+  MIT
+
+[npm-image]: https://img.shields.io/npm/v/koa-track.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/koa-track
+[travis-image]: https://img.shields.io/travis/koajs/track.svg?style=flat-square
+[travis-url]: https://travis-ci.org/koajs/track
