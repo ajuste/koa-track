@@ -8,8 +8,8 @@ var stubs      = {
 describe("koa-track", function() {
 
   before(function(){
-    proxyquire("../../index", { "node-uuid" : stubs["node-uuid"] });
-    this.app = require("./server");
+    mod = proxyquire("../../index", { "node-uuid" : stubs["node-uuid"] });
+    this.app = require("./app").createApp(mod);
   });
 
   after(function() {
