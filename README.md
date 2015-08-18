@@ -1,5 +1,6 @@
 [![npm version][npm-image]][npm-url]
 [![Build Status](https://travis-ci.org/ajuste/koa-track.svg?branch=master)](https://travis-ci.org/ajuste/koa-track)
+[![Coverage Status](https://coveralls.io/repos/ajuste/koa-track/badge.svg?branch=master&service=github)](https://coveralls.io/github/ajuste/koa-track?branch=master)
 
 # koa-track
 
