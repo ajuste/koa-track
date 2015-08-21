@@ -5,7 +5,3 @@ node_js:
   - "2"
 script: npm test
 sudo: false
-before_install:
-  - pip install codecov
-after_success:
-  - codecov
