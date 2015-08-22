@@ -5,6 +5,13 @@ var server     = null;
 module.exports.createApp = function(middleware) {
 
   server     = koa();
+
+  server.use(koaRoute.get("/alreadySet", function* (next) {
+    this.trackingRequestId = "alreadySet";
+    yield* next
+    this.body = "OK";
+  }));
+
   server.use(middleware);
 
   server.use(koaRoute.get("/200", function* () {

@@ -68,6 +68,23 @@ describe("requestId()", function() {
       });
     });
 
+    describe("server responding 200 with id already set", function() {
+
+      before(befores.defParameters);
+      after (afters.common);
+
+      it("should respond with a request id header", function(done) {
+        request(this.app.listen())
+        .get("/alreadySet")
+        .expect("x-rid", "alreadySet")
+        .expect(200, "OK", done);
+      });
+
+      it("should have called v4 uuid once", function() {
+        assert(!this.stub.nodeUuid.v4.calledOnce);
+      });
+    });
+
     describe("server responding 404", function() {
 
       before(befores.defParameters);
