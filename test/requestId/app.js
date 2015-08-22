@@ -2,10 +2,10 @@ var koa        = require("koa");
 var koaRoute   = require("koa-route");
 var server     = null;
 
-module.exports.createApp = function(mod) {
+module.exports.createApp = function(middleware) {
 
   server     = koa();
-  server.use(mod.requestId());
+  server.use(middleware);
 
   server.use(koaRoute.get("/200", function* () {
     this.body = "OK";

@@ -1,9 +1,9 @@
 var _    = require("underscore");
 var uuid = require("node-uuid");
+var requestId = require('./lib/request-id');
 
 var UserIdCookie         = "uid";
 var UserIdCookieDuration = "31536000000"; //1year
-var RequestIdHeader      = "x-rid";
 
 /**
  * @function Set cookie's value by name
@@ -41,17 +41,7 @@ var getReqConfigurationDefaults = function(opts) {
   });
 };
 module.exports = {
-
-  requestId : function(opts) {
-    opts = _.defaults(opts || {}, {
-      headerName: RequestIdHeader
-    });
-    return function* (next) {
-      this.trackingRequestId = uuid.v4();
-      yield* next;
-      this.set(opts.headerName, this.trackingRequestId);
-    };
-  },
+  requestId : requestId.middleware,
   userId : function(opts) {
     opts = _.defaults(opts || {}, {
       cookieName: UserIdCookie,
@@ -62,5 +52,8 @@ module.exports = {
       yield* next;
       setCookieValue(this, opts.cookieName, this.trackingUserId, opts.cookieDuration);
     };
+  },
+  spread : function(ctx, opts) {
+
   }
 };
