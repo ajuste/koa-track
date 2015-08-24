@@ -1,125 +1,56 @@
-var _          = require("underscore");
-var assert     = require("assert");
-var request    = require("supertest");
-var proxyquire = require("proxyquire");
-var stubs      = {
-  nodeUuid : require("./stubs/node-uuid")
-};
+var assert  = require("assert");
+var sinon   = require("sinon");
+var mod     = require("../../lib/request-id");
+var co      = require("co");
 
 var afters = {
   common : function() {
-    this.stub       = null;
-    this.middleware = null;
-    this.app        = null;
+    this.stub           = null;
+    this.middleware     = null;
+    this.middlewareArgs = null;
+    this.func           = null;
   }
 };
 var befores = {
-  defParameters : function() {
-    this.stub       = { nodeUuid : stubs.nodeUuid.fixedV1() };
-    this.middleware = proxyquire("../../lib/request-id", { "node-uuid" : this.stub.nodeUuid }).middleware();
-    this.app        = require("./app").createApp(this.middleware);
-  },
-  notDefaultParameters : function() {
-    this.stub       = { nodeUuid : stubs.nodeUuid.fixedV1() };
-    this.middleware = proxyquire("../../lib/request-id", { "node-uuid" : this.stub.nodeUuid }).middleware({
-      headerName : "x-quest-id"
-    });
-    this.app        = require("./app").createApp(this.middleware);
+  common : function() {
+    this.stub       = {
+      mod      : {
+        getDefaults : sinon.stub().returns({
+          headerName : "x-rid"
+        }),
+        setTrackingId : sinon.stub()
+      },
+      ctx : {
+        set : sinon.stub(),
+        trackingRequestId : "tracking"
+      }
+    };
+    this.middlewareArgs = {};
+    this.middleware     = mod(this.stub.mod).middleware;
   }
 };
-describe("requestId()", function() {
+describe("requestId's", function() {
 
-  describe("with not default parameters", function() {
+  describe("middleware()", function() {
 
-    describe("server responding 200", function() {
+    before(befores.common);
+    after (afters.common);
 
-      before(befores.notDefaultParameters);
-      after (afters.common);
-
-      it("should respond with a request id header", function(done) {
-        request(this.app.listen())
-        .get("/200")
-        .expect("x-quest-id", "b4bdeac1-6a53-4380-bd41-a4c6535bf4e3")
-        .expect(200, "OK", done);
-      });
-
-      it("should have called v4 uuid once", function() {
-        assert(this.stub.nodeUuid.v4.calledOnce);
-      });
-    });
-  });
-
-  describe("with default parameters", function() {
-
-    describe("server responding 200", function() {
-
-      before(befores.defParameters);
-      after (afters.common);
-
-      it("should respond with a request id header", function(done) {
-        request(this.app.listen())
-        .get("/200")
-        .expect("x-rid", "b4bdeac1-6a53-4380-bd41-a4c6535bf4e3")
-        .expect(200, "OK", done);
-      });
-
-      it("should have called v4 uuid once", function() {
-        assert(this.stub.nodeUuid.v4.calledOnce);
-      });
+    it("should have called getDefaults once", function() {
+      this.func = this.middleware(this.middlewareArgs);
+      assert(this.stub.mod.getDefaults.calledOnce);
+      assert(this.stub.mod.getDefaults.calledWith(this.middlewareArgs));
     });
 
-    describe("server responding 200 with id already set", function() {
+    it("should have called setTrackingId once", function() {
 
-      before(befores.defParameters);
-      after (afters.common);
-
-      it("should respond with a request id header", function(done) {
-        request(this.app.listen())
-        .get("/alreadySet")
-        .expect("x-rid", "alreadySet")
-        .expect(200, "OK", done);
-      });
-
-      it("should have called v4 uuid once", function() {
-        assert(!this.stub.nodeUuid.v4.calledOnce);
-      });
+      co(this.func.call(this.stub.ctx, function* () { }));
+      assert(this.stub.mod.setTrackingId.calledOnce);
     });
 
-    describe("server responding 404", function() {
-
-      before(befores.defParameters);
-      after (afters.common);
-
-      it("should respond with a request id header", function(done) {
-        request(this.app.listen())
-        .get("/404")
-        .expect("x-rid", "b4bdeac1-6a53-4380-bd41-a4c6535bf4e3")
-        .expect(404, "OK", done);
-      });
-
-      it("should have called v4 uuid once", function() {
-        assert(this.stub.nodeUuid.v4.calledOnce);
-      });
+    it("should have called set on ctx once with requestId", function() {
+      assert(this.stub.ctx.set.calledOnce);
+      assert(this.stub.ctx.set.calledWith("x-rid", "tracking"));
     });
-
-    describe("erroring server", function() {
-
-      before(befores.defParameters);
-      after (afters.common);
-
-      it("should respond without a request id header", function(done) {
-        request(this.app.listen())
-        .get("/error")
-        .expect(function(res) {
-          assert(_.isUndefined(res.headers["x-rid"]));
-        })
-        .expect(500, "Internal Server Error", done);
-      });
-
-      it("should have called v4 uuid once", function() {
-        assert(this.stub.nodeUuid.v4.calledOnce);
-      });
-    });
-
   });
 });

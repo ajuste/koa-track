@@ -41,7 +41,7 @@ var getReqConfigurationDefaults = function(opts) {
   });
 };
 module.exports = {
-  requestId : requestId.middleware,
+  requestId : requestId.middleware(),
   userId : function(opts) {
     opts = _.defaults(opts || {}, {
       cookieName: UserIdCookie,
