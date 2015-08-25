@@ -27,7 +27,7 @@ var befores = {
     this.app        = require("./app").createApp(this.middleware);
   }
 };
-describe("requestId's", function() {
+describe("requestId integration testing", function() {
 
   describe("middleware()", function() {
 

@@ -1,6 +1,7 @@
 var _    = require("underscore");
 var uuid = require("node-uuid");
 var requestId = require('./lib/request-id');
+var spread    = require('./lib/spread');
 
 var UserIdCookie         = "uid";
 var UserIdCookieDuration = "31536000000"; //1year
@@ -42,6 +43,7 @@ var getReqConfigurationDefaults = function(opts) {
 };
 module.exports = {
   requestId : requestId.middleware(),
+  spread    : spread.middleware(),
   userId : function(opts) {
     opts = _.defaults(opts || {}, {
       cookieName: UserIdCookie,
@@ -52,8 +54,5 @@ module.exports = {
       yield* next;
       setCookieValue(this, opts.cookieName, this.trackingUserId, opts.cookieDuration);
     };
-  },
-  spread : function(ctx, opts) {
-
   }
 };
