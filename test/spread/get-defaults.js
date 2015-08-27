@@ -2,8 +2,8 @@ var _          = require("underscore");
 var assert     = require("assert");
 var proxyquire = require("proxyquire");
 
-var stubs = {
-  requestId : require("./stubs/request-id")
+var mocks = {
+  requestId : require("./mocks/request-id")
 };
 
 describe("spread's", function() {
@@ -11,7 +11,7 @@ describe("spread's", function() {
   describe("getDefaults()", function() {
 
     before(function() {
-      this.mod = proxyquire("../../lib/spread", { "./request-id" : stubs.requestId.defaultHeaderName() })();
+      this.mod = proxyquire("../../lib/spread", { "./request-id" : mocks.requestId.defaultHeaderName() })();
     });
 
     after(function() {

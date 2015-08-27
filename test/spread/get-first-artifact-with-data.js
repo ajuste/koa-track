@@ -1,8 +1,8 @@
 var _          = require("underscore");
 var assert     = require("assert");
 
-var stubs = {
-  spread : require("./stubs/spread")
+var mocks = {
+  spread : require("./mocks/spread")
 };
 
 describe("spread's", function() {
@@ -17,8 +17,8 @@ describe("spread's", function() {
 
       before(function() {
         this.artifacts = [{},{}];
-        this.stub = stubs.spread.getFirstArtifactWithDataFail()();
-        this.mod = require("../../lib/spread")(this.stub);
+        this.mock = mocks.spread.getFirstArtifactWithDataFail()();
+        this.mod = require("../../lib/spread")(this.mock);
       });
 
       it("should return undefined", function() {
@@ -35,8 +35,8 @@ describe("spread's", function() {
       before(function() {
         this.artifacts = [0,1,2];
         this.ctx = {};
-        this.stub = stubs.spread.getFirstArtifactWithDataSecondSuccess(this.ctx)();
-        this.mod = require("../../lib/spread")(this.stub);
+        this.mock = mocks.spread.getFirstArtifactWithDataSecondSuccess(this.ctx)();
+        this.mod = require("../../lib/spread")(this.mock);
       });
 
       it("should return \'test-value\'", function() {

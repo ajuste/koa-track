@@ -2,8 +2,8 @@ var _          = require("underscore");
 var assert     = require("assert");
 var proxyquire = require("proxyquire");
 
-var stubs = {
-  spread : require("./stubs/spread")
+var mocks = {
+  spread : require("./mocks/spread")
 };
 
 describe("spread's", function() {

@@ -21,3 +21,11 @@ module.exports.getFirstArtifactWithDataFail = function() {
     };
   };
 };
+module.exports.getSameOptionsAndArtifacts = function(opts, art) {
+  return function() {
+    return {
+      getDefaults              : sinon.stub().returns(opts),
+      getFirstArtifactWithData : sinon.stub().returns(art)
+    };
+  };
+};
