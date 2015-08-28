@@ -2,26 +2,26 @@ var _          = require("underscore");
 var assert     = require("assert");
 var request    = require("supertest");
 var proxyquire = require("proxyquire");
-var stubs      = {
-  nodeUuid : require("./stubs/node-uuid")
+var mocks      = {
+  nodeUuid : require("./mocks/node-uuid")
 };
 
 var afters = {
   common : function() {
-    this.stub       = null;
+    this.mock       = null;
     this.middleware = null;
     this.app        = null;
   }
 };
 var befores = {
   defParameters : function() {
-    this.stub       = { nodeUuid : stubs.nodeUuid.fixedV1() };
-    this.middleware = proxyquire("../../lib/request-id", { "node-uuid" : this.stub.nodeUuid })().middleware();
+    this.mock       = { nodeUuid : mocks.nodeUuid.fixedV1() };
+    this.middleware = proxyquire("../../lib/request-id", { "node-uuid" : this.mock.nodeUuid })().middleware();
     this.app        = require("./app").createApp(this.middleware);
   },
   notDefaultParameters : function() {
-    this.stub       = { nodeUuid : stubs.nodeUuid.fixedV1() };
-    this.middleware = proxyquire("../../lib/request-id", { "node-uuid" : this.stub.nodeUuid })().middleware({
+    this.mock       = { nodeUuid : mocks.nodeUuid.fixedV1() };
+    this.middleware = proxyquire("../../lib/request-id", { "node-uuid" : this.mock.nodeUuid })().middleware({
       headerName : "x-quest-id"
     });
     this.app        = require("./app").createApp(this.middleware);
@@ -46,7 +46,7 @@ describe("requestId integration testing", function() {
         });
 
         it("should have called v4 uuid once", function() {
-          assert(this.stub.nodeUuid.v4.calledOnce);
+          assert(this.mock.nodeUuid.v4.calledOnce);
         });
       });
     });
@@ -66,7 +66,7 @@ describe("requestId integration testing", function() {
         });
 
         it("should have called v4 uuid once", function() {
-          assert(this.stub.nodeUuid.v4.calledOnce);
+          assert(this.mock.nodeUuid.v4.calledOnce);
         });
       });
 
@@ -83,7 +83,7 @@ describe("requestId integration testing", function() {
         });
 
         it("should have called v4 uuid once", function() {
-          assert(!this.stub.nodeUuid.v4.calledOnce);
+          assert(!this.mock.nodeUuid.v4.calledOnce);
         });
       });
 
@@ -100,7 +100,7 @@ describe("requestId integration testing", function() {
         });
 
         it("should have called v4 uuid once", function() {
-          assert(this.stub.nodeUuid.v4.calledOnce);
+          assert(this.mock.nodeUuid.v4.calledOnce);
         });
       });
 
@@ -119,7 +119,7 @@ describe("requestId integration testing", function() {
         });
 
         it("should have called v4 uuid once", function() {
-          assert(this.stub.nodeUuid.v4.calledOnce);
+          assert(this.mock.nodeUuid.v4.calledOnce);
         });
       });
 

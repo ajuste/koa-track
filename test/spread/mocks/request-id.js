@@ -1,14 +1,15 @@
 var sinon = require("sinon");
 
 module.exports.defaultHeaderName = function() {
+  const result = {
+    defaultHeaderName : "mocked-name"
+  };
   return function() {
-    return {
-      defaultHeaderName : "mocked-name"
-    };
+    return result;
   };
 };
 module.exports.setTrackingId = function() {
-  var result = {
+  const result = {
     setTrackingId : sinon.stub()
   };
   return function() {

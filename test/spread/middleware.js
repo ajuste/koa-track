@@ -1,11 +1,10 @@
-var _          = require("underscore");
-var assert     = require("assert");
-var co         = require("co");
-var sinon      = require("sinon");
-var mod        = require("../../lib/spread");
-var proxyquire = require("proxyquire");
-
-var mocks  = {
+const _          = require("underscore");
+const assert     = require("assert");
+const co         = require("co");
+const sinon      = require("sinon");
+const mod        = require("../../lib/spread");
+const proxyquire = require("proxyquire");
+const mocks      = {
   spread    : require("./mocks/spread"),
   requestId : require("./mocks/request-id")
 };
@@ -25,7 +24,7 @@ var afters = {
 var befores = {
   common : function(returnedArtifact) {
     return function() {
-      this.middlewareArgs = { requestId : { read : true, readArtifacts : [{}] }};
+      this.middlewareArgs = { requestId : { read : true, artifacts : [{}] }};
       this.getFirstArtifactWithDataArgs = {};
       this.returnedArtifact = returnedArtifact;
       this.mocks = {
@@ -52,13 +51,13 @@ describe("spread's", function() {
         before(befores.common());
         after (afters.common);
 
-        it("should have called getDefaults once", function() {
+        it("should have called getMiddlewareDefaults once", function() {
           this.func = this.middleware(this.middlewareArgs);
-          assert(this.mod.getDefaults.calledOnce);
+          assert(this.mod.getMiddlewareDefaults.calledOnce);
         });
 
-        it("should have called getDefaults with correct arguments", function() {
-          assert(this.mod.getDefaults.calledWith(this.middlewareArgs));
+        it("should have called getMiddlewareDefaults with correct arguments", function() {
+          assert(this.mod.getMiddlewareDefaults.calledWith(this.middlewareArgs));
         });
 
         it("should have called getFirstArtifactWithData once", function() {
@@ -67,15 +66,11 @@ describe("spread's", function() {
         });
 
         it("should have called getFirstArtifactWithData with correct arguments", function() {
-          assert(this.mod.getFirstArtifactWithData.calledWith(this.middlewareArgs.requestId.readArtifacts));
+          assert(this.mod.getFirstArtifactWithData.calledWith(this.mocks.ctx, this.middlewareArgs.requestId.artifacts));
         });
 
         it("should have not called setRequestId", function() {
           assert(this.mocks["./request-id"]().setTrackingId.notCalled);
-        });
-
-        it("should have set trackingSpread", function() {
-          assert(_.isFunction(this.mocks.ctx.trackingSpread));
         });
       });
 
@@ -84,13 +79,13 @@ describe("spread's", function() {
         before(befores.common({data:"data"}));
         after (afters.common);
 
-        it("should have called getDefaults once", function() {
+        it("should have called getMiddlewareDefaults once", function() {
           this.func = this.middleware(this.middlewareArgs);
-          assert(this.mod.getDefaults.calledOnce);
+          assert(this.mod.getMiddlewareDefaults.calledOnce);
         });
 
-        it("should have called getDefaults with correct arguments", function() {
-          assert(this.mod.getDefaults.calledWith(this.middlewareArgs));
+        it("should have called getMiddlewareDefaults with correct arguments", function() {
+          assert(this.mod.getMiddlewareDefaults.calledWith(this.middlewareArgs));
         });
 
         it("should have called getFirstArtifactWithData once", function() {
@@ -99,7 +94,7 @@ describe("spread's", function() {
         });
 
         it("should have called getFirstArtifactWithData with correct arguments", function() {
-          assert(this.mod.getFirstArtifactWithData.calledWith(this.middlewareArgs.requestId.readArtifacts));
+          assert(this.mod.getFirstArtifactWithData.calledWith(this.mocks.ctx, this.middlewareArgs.requestId.artifacts));
         });
 
         it("should have called setRequestId once", function() {
@@ -107,11 +102,7 @@ describe("spread's", function() {
         });
 
         it("should have called setRequestId with correct arguments", function() {
-          assert(this.mocks["./request-id"]().setTrackingId.calledWith(this.mocks.ctx, this.returnedArtifact.data));
-        });
-
-        it("should have set trackingSpread", function() {
-          assert(_.isFunction(this.mocks.ctx.trackingSpread));
+          assert(this.mocks["./request-id"]().setTrackingId.calledWith(this.mocks.ctx, this.returnedArtifact.value));
         });
       });
     });

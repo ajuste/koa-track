@@ -1,21 +1,21 @@
 var assert     = require("assert");
 var proxyquire = require("proxyquire");
-var stubs      = {
-  nodeUuid : require("./stubs/node-uuid")
+var mocks      = {
+  nodeUuid : require("./mocks/node-uuid")
 };
 
 var afters = {
   common : function() {
     this.ctx  = null;
-    this.stub = null;
+    this.mock = null;
     this.mod  = null;
   }
 };
 var befores = {
   common : function() {
     this.ctx  = {};
-    this.stub = { nodeUuid : stubs.nodeUuid.fixedV1() };
-    this.mod  = proxyquire("../../lib/request-id", { "node-uuid" : this.stub.nodeUuid })();
+    this.mock = { nodeUuid : mocks.nodeUuid.fixedV1() };
+    this.mod  = proxyquire("../../lib/request-id", { "node-uuid" : this.mock.nodeUuid })();
   }
 };
 describe("requestId's", function() {
@@ -33,7 +33,7 @@ describe("requestId's", function() {
       });
 
       it("should have called v4 uuid once", function() {
-        assert(this.stub.nodeUuid.v4.calledOnce);
+        assert(this.mock.nodeUuid.v4.calledOnce);
       });
     });
 
@@ -48,7 +48,7 @@ describe("requestId's", function() {
       });
 
       it("should have not called v4 uuid once", function() {
-        assert(!this.stub.nodeUuid.v4.calledOnce);
+        assert(!this.mock.nodeUuid.v4.calledOnce);
       });
     });
 
@@ -64,7 +64,7 @@ describe("requestId's", function() {
       });
 
       it("should have not called v4 uuid once", function() {
-        assert(!this.stub.nodeUuid.v4.calledOnce);
+        assert(!this.mock.nodeUuid.v4.calledOnce);
       });
     });
 
@@ -80,7 +80,7 @@ describe("requestId's", function() {
       });
 
       it("should have not called v4 uuid once", function() {
-        assert(!this.stub.nodeUuid.v4.calledOnce);
+        assert(!this.mock.nodeUuid.v4.calledOnce);
       });
     });
   });

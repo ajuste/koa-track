@@ -1,8 +1,7 @@
-var _          = require("underscore");
-var assert     = require("assert");
-var proxyquire = require("proxyquire");
-
-var mocks = {
+const _          = require("underscore");
+const assert     = require("assert");
+const proxyquire = require("proxyquire");
+const mocks      = {
   spread : require("./mocks/spread")
 };
 

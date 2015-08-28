@@ -5,7 +5,7 @@ var co      = require("co");
 
 var afters = {
   common : function() {
-    this.stub           = null;
+    this.mock           = null;
     this.middleware     = null;
     this.middlewareArgs = null;
     this.func           = null;
@@ -13,20 +13,12 @@ var afters = {
 };
 var befores = {
   common : function() {
-    this.stub       = {
-      mod      : {
-        getDefaults : sinon.stub().returns({
-          headerName : "x-rid"
-        }),
-        setTrackingId : sinon.stub()
-      },
-      ctx : {
-        set : sinon.stub(),
-        trackingRequestId : "tracking"
-      }
+    this.mock       = {
+      mod : require("./mocks/request-id").default()(),
+      ctx : { set : sinon.stub(), trackingRequestId : "tracking" }
     };
     this.middlewareArgs = {};
-    this.middleware     = mod(this.stub.mod).middleware;
+    this.middleware     = mod(this.mock.mod).middleware;
   }
 };
 describe("requestId's", function() {
@@ -38,19 +30,19 @@ describe("requestId's", function() {
 
     it("should have called getDefaults once", function() {
       this.func = this.middleware(this.middlewareArgs);
-      assert(this.stub.mod.getDefaults.calledOnce);
-      assert(this.stub.mod.getDefaults.calledWith(this.middlewareArgs));
+      assert(this.mock.mod.getDefaults.calledOnce);
+      assert(this.mock.mod.getDefaults.calledWith(this.middlewareArgs));
     });
 
     it("should have called setTrackingId once", function() {
 
-      co(this.func.call(this.stub.ctx, function* () { }));
-      assert(this.stub.mod.setTrackingId.calledOnce);
+      co(this.func.call(this.mock.ctx, function* () { }));
+      assert(this.mock.mod.setTrackingId.calledOnce);
     });
 
     it("should have called set on ctx once with requestId", function() {
-      assert(this.stub.ctx.set.calledOnce);
-      assert(this.stub.ctx.set.calledWith("x-rid", "tracking"));
+      assert(this.mock.ctx.set.calledOnce);
+      assert(this.mock.ctx.set.calledWith("x-rid", "tracking"));
     });
   });
 });

@@ -1,7 +1,6 @@
-var _          = require("underscore");
-var assert     = require("assert");
-
-var mocks = {
+const _      = require("underscore");
+const assert = require("assert");
+const mocks  = {
   spread : require("./mocks/spread")
 };
 
@@ -17,12 +16,13 @@ describe("spread's", function() {
 
       before(function() {
         this.artifacts = [{},{}];
-        this.mock = mocks.spread.getFirstArtifactWithDataFail()();
-        this.mod = require("../../lib/spread")(this.mock);
+        this.mock      = mocks.spread.getFirstArtifactWithDataFail()();
+        this.ctx       = {};
+        this.mod       = require("../../lib/spread")(this.mock);
       });
 
       it("should return undefined", function() {
-        assert.equal(this.mod.getFirstArtifactWithData(this.artifacts), undefined);
+        assert.equal(this.mod.getFirstArtifactWithData(this.ctx, this.artifacts), undefined);
       });
 
       it("should have called readArtifact() twice", function() {
@@ -40,7 +40,7 @@ describe("spread's", function() {
       });
 
       it("should return \'test-value\'", function() {
-        var result = this.mod.getFirstArtifactWithData.call(this.ctx, this.artifacts);
+        var result = this.mod.getFirstArtifactWithData.call(this.ctx, this.ctx, this.artifacts);
         assert(result);
         assert.equal(result.artifact, this.artifacts[1]);
         assert.equal(result.value, "test-value");
