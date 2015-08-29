@@ -64,7 +64,6 @@ describe("spread's", function() {
 
         it("should have set requestId with correct header name", function() {
           this.func(this.mocks.ctx, this.opts);
-          debugger;
           assert.equal(this.opts.options.headers.test, "req-id-val");
         });
 

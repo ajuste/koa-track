@@ -4,6 +4,7 @@ const request    = require("supertest");
 const proxyquire = require("proxyquire");
 const app        = require("./app");
 const sinon      = require("sinon");
+const spread     = require("../../index").spread;
 
 const mocks      = {
   nodeUuid : require("./mocks/node-uuid")
@@ -13,7 +14,7 @@ describe("spread integration testing", function() {
 
   before(function() {
     this.mock = { nodeUuid : mocks.nodeUuid.fixedV1() };
-    this.spreadMiddlewareDb  = require("../../lib/spread")().middleware({
+    this.spreadMiddlewareDb  = spread.middleware({
       requestId: {
         read: true,
         artifacts:[{
@@ -21,7 +22,7 @@ describe("spread integration testing", function() {
         }]
       }
     });
-    this.spreadFe  = require("../../lib/spread")().spread({
+    this.spreadFe  = spread.spread({
       requestId: {
         write: true,
         artifactName:"x-quest-id"

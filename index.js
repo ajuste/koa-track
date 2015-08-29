@@ -3,6 +3,6 @@
  * @author ajuste
  */
 module.exports = {
-  requestId : require("./lib/request-id").middleware,
-  spread    : require("./lib/spread").middleware
+  requestId : require("./lib/request-id")(),
+  spread    : require("./lib/spread")()
 };

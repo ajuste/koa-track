@@ -19,7 +19,6 @@ describe("spread's", function() {
 
     it("should return new object when passed null argument", function() {
       var def = this.mod.getSpreadDefaults(null);
-      debugger;
       assert(def);
       assert(def.requestId);
       assert.equal(def.requestId.write, false);
