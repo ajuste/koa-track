@@ -32,3 +32,11 @@ module.exports.getSameOptionsAndArtifacts = function(opts, art) {
     return result;
   };
 };
+module.exports.getSpreadDefaults = function(opts) {
+  const result = {
+    getSpreadDefaults : sinon.stub().returns(opts)
+  };
+  return function() {
+    return result;
+  };
+};
