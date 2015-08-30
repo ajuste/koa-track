@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Koa-track by ajuste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Koa-track</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/ajuste/koa-track" class="btn">View on GitHub</a>
+      <a href="https://github.com/ajuste/koa-track/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ajuste/koa-track/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><a href="https://www.npmjs.com/package/koa-track"><img src="https://img.shields.io/npm/v/koa-track.svg?style=flat-square" alt="npm version"></a>
+<a href="https://travis-ci.org/ajuste/koa-track"><img src="https://travis-ci.org/ajuste/koa-track.svg?branch=master" alt="Build Status"></a>
+<a href="http://codecov.io/github/ajuste/koa-track?branch=master"><img src="http://codecov.io/github/ajuste/koa-track/coverage.svg?branch=master" alt="codecov.io"></a></p>
+
+<h1>
+<a id="koa-track" class="anchor" href="#koa-track" aria-hidden="true"><span class="octicon octicon-link"></span></a>koa-track</h1>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<div class="highlight highlight-sh"><pre>
+npm install koa-track
+</pre></div>
+
+<h2>
+<a id="what-can-we-do-for-you" class="anchor" href="#what-can-we-do-for-you" aria-hidden="true"><span class="octicon octicon-link"></span></a>What can we do for you?</h2>
+
+<p>Are you having a hard time keeping track of what happened with a erroring flow?</p>
+
+<p>Then this module if perfect for you. Generate a unique id that identifies a request and spread it along with subsequent requests to different services you might be using.</p>
+
+<p>This way you can identify a flow and see what went wrong.</p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>Use requestId middleware wherever you need to generate an id for an incoming request:</p>
+
+<div class="highlight highlight-js"><pre>
+<span class="pl-k">var</span> koa       <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>koa<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> koaTrack  <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>koa-track<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> koaApp    <span class="pl-k">=</span> <span class="pl-c1">koa</span>();
+<span class="pl-k">var</span> requestId <span class="pl-k">=</span> koaTrack.<span class="pl-c1">requestId</span>.<span class="pl-c1">middleware</span>;
+
+koaApp.<span class="pl-c1">use</span>(koaTrack.<span class="pl-c1">requestId</span>.<span class="pl-c1">middleware</span>());
+</pre></div>
+
+<p>If you need to spread your tracking information to other servers you can do it with spread utility:</p>
+
+<div class="highlight highlight-js"><pre>
+<span class="pl-k">var</span> http     <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>http<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> koaTrack <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>koa-track<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> spread   <span class="pl-k">=</span> koaTrack.<span class="pl-c1">spread</span>.<span class="pl-c1">spread</span>({ requestId<span class="pl-k">:</span> { write<span class="pl-k">:</span> <span class="pl-c1">true</span> } });
+<span class="pl-k">var</span> self     <span class="pl-k">=</span> <span class="pl-v">this</span>;
+
+<span class="pl-c">// set up your http request options as usual</span>
+<span class="pl-k">var</span> requestOptions <span class="pl-k">=</span> {
+  hostname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>127.0.0.1<span class="pl-pds">"</span></span>,
+  port<span class="pl-k">:</span> <span class="pl-c1">3000</span>,
+  path<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>/user<span class="pl-pds">"</span></span>,
+  method<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>GET<span class="pl-pds">"</span></span>
+};
+<span class="pl-c">// let spread function override options to embed current request id</span>
+requestOptions <span class="pl-k">=</span> <span class="pl-c1">spread</span>(self, {options<span class="pl-k">:</span> requestOptions, type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http-request<span class="pl-pds">"</span></span> });
+
+<span class="pl-c">// execute request as usual</span>
+<span class="pl-k">var</span> req <span class="pl-k">=</span> http.<span class="pl-c1">request</span>(requestOptions, <span class="pl-k">function</span>(<span class="pl-smi">res</span>) {
+  <span class="pl-c">// on res callback</span>
+});
+</pre></div>
+
+<p>How do I achieve a koa application reuse tracking information from a request? </p>
+
+<div class="highlight highlight-js"><pre>
+<span class="pl-k">var</span> koaTrack   <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>koa-track<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> middleware <span class="pl-k">=</span> koaTrack.<span class="pl-c1">spread</span>.<span class="pl-c1">middleware</span>({ requestId<span class="pl-k">:</span> { read<span class="pl-k">:</span> <span class="pl-c1">true</span> } });
+
+koaApp.<span class="pl-c1">use</span>(<span class="pl-c1">middleware</span>());
+</pre></div>
+
+<h3>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<p>Overriding default options for requestId middleware.</p>
+
+<div class="highlight highlight-js"><pre>
+koaTrack.<span class="pl-c1">requestId</span>.<span class="pl-c1">middleware</span>({
+  headerName <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>x-rid<span class="pl-pds">"</span></span>  <span class="pl-c">// [String] - optional: Specify header name for request-id</span>
+})
+</pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ajuste/koa-track">Koa-track</a> is maintained by <a href="https://github.com/ajuste">ajuste</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
