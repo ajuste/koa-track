@@ -1,6 +1,6 @@
 {
   "name": "koa-track",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Middleware for koa that helps to keep track of your users",
   "main": "index.js",
   "directories": {
